@@ -11,7 +11,6 @@ export interface Profile {
   location: string;
   email: string;
   resumeUrl: string;
-  avatarUrl: string;
   socials: SocialLink[];
 }
 
@@ -52,7 +51,6 @@ export const profile: Profile = {
   location: "India",
   email: "jenilpadshala@gmail.com",
   resumeUrl: "/resume.pdf",
-  avatarUrl: "/avatar.svg",
   socials: [
     {
       label: "GitHub",
