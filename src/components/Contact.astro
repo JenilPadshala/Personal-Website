@@ -1,0 +1,51 @@
+---
+import SectionHeading from "./SectionHeading.astro";
+import { profile } from "../data/resume";
+---
+
+<section id="contact" class="mt-16 scroll-mt-8">
+  <SectionHeading eyebrow="Say Hello" title="Get in Touch" />
+
+  <div class="glass-card sheen p-8 sm:p-10">
+    <p class="max-w-xl text-base leading-relaxed text-muted">
+      I'm always open to discussing AI/ML, systems engineering, research, or new
+      opportunities. Feel free to reach out.
+    </p>
+
+    <div class="mt-6 grid gap-3 sm:grid-cols-2">
+      <a
+        href={`mailto:${profile.email}`}
+        class="glass glass-card-hover flex items-center gap-3 rounded-2xl p-4"
+      >
+        <span class="text-sm font-semibold">Email</span>
+        <span class="ml-auto text-sm text-muted">{profile.email}</span>
+      </a>
+      {
+        profile.socials
+          .filter((s) => s.label !== "Email")
+          .map((s) => (
+            <a
+              href={s.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="glass glass-card-hover flex items-center gap-3 rounded-2xl p-4"
+            >
+              <span class="text-sm font-semibold">{s.label}</span>
+              <span class="ml-auto text-sm text-muted">{s.handle}</span>
+            </a>
+          ))
+      }
+    </div>
+
+    <a
+      href={profile.resumeUrl}
+      download
+      class="glass sheen mt-6 inline-flex items-center gap-2 rounded-full px-5 py-2.5 text-sm font-semibold transition hover:-translate-y-0.5"
+    >
+      <svg viewBox="0 0 24 24" class="h-4 w-4" fill="currentColor" aria-hidden="true">
+        <path d="M12 3a1 1 0 0 1 1 1v9.59l2.3-2.3a1 1 0 0 1 1.4 1.42l-4 4a1 1 0 0 1-1.4 0l-4-4a1 1 0 1 1 1.4-1.42l2.3 2.3V4a1 1 0 0 1 1-1ZM5 19a1 1 0 0 1 1-1h12a1 1 0 1 1 0 2H6a1 1 0 0 1-1-1Z" />
+      </svg>
+      Download Resume
+    </a>
+  </div>
+</section>

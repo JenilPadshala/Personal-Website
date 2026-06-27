@@ -1,0 +1,27 @@
+---
+import SectionHeading from "./SectionHeading.astro";
+import { skills } from "../data/resume";
+---
+
+<section id="skills" class="mt-16 scroll-mt-8">
+  <SectionHeading eyebrow="Toolbox" title="Technical Skills" />
+
+  <div class="grid gap-5 sm:grid-cols-2">
+    {
+      skills.map((group) => (
+        <article class="glass-card glass-card-hover p-6">
+          <h3 class="text-sm font-bold uppercase tracking-wider text-muted">
+            {group.category}
+          </h3>
+          <div class="mt-4 flex flex-wrap gap-2">
+            {group.items.map((item) => (
+              <span class="rounded-xl border border-[color:var(--glass-border)] px-3 py-1.5 text-sm font-medium">
+                {item}
+              </span>
+            ))}
+          </div>
+        </article>
+      ))
+    }
+  </div>
+</section>

@@ -1,0 +1,183 @@
+---
+import { Icon } from "astro-icon/components";
+
+interface DockItem {
+  id: string;
+  label: string;
+  href: string;
+  icon: string;
+}
+
+// Lucide outline icons (via astro-icon + @iconify-json/lucide).
+const items: DockItem[] = [
+  { id: "about", label: "About", href: "/#about", icon: "lucide:user-round" },
+  {
+    id: "experience",
+    label: "Experience",
+    href: "/#experience",
+    icon: "lucide:briefcase",
+  },
+  { id: "projects", label: "Projects", href: "/#projects", icon: "lucide:layers" },
+  { id: "skills", label: "Skills", href: "/#skills", icon: "lucide:sparkles" },
+  { id: "blog", label: "Blog", href: "/blog", icon: "lucide:notebook-pen" },
+  { id: "contact", label: "Contact", href: "/#contact", icon: "lucide:mail" },
+];
+---
+
+<nav class="dock" aria-label="Primary">
+  <div class="glass dock-inner sheen" role="tablist">
+    {
+      items.map((item) => (
+        <a
+          href={item.href}
+          class="dock-link"
+          data-dock={item.id}
+          aria-label={item.label}
+        >
+          <Icon name={item.icon} class="dock-icon" aria-hidden="true" />
+          <span class="dock-label">{item.label}</span>
+        </a>
+      ))
+    }
+
+    <span class="dock-divider" aria-hidden="true"></span>
+
+    <button id="theme-toggle" class="dock-link" aria-label="Toggle theme" type="button">
+      <Icon name="lucide:sun" class="dock-icon sun" aria-hidden="true" />
+      <Icon name="lucide:moon" class="dock-icon moon" aria-hidden="true" />
+    </button>
+  </div>
+</nav>
+
+<style>
+  .dock {
+    position: fixed;
+    left: 50%;
+    bottom: max(1rem, env(safe-area-inset-bottom));
+    transform: translateX(-50%);
+    z-index: 50;
+    width: max-content;
+    max-width: calc(100vw - 1.5rem);
+  }
+
+  .dock-inner {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.5rem;
+    border-radius: 9999px;
+  }
+
+  .dock-link {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.15rem;
+    width: 4.75rem;
+    padding: 0.55rem 0.25rem;
+    border-radius: 1.25rem;
+    color: var(--text-muted);
+    cursor: pointer;
+    background: transparent;
+    border: none;
+    transition:
+      color 0.25s ease,
+      background 0.25s ease,
+      transform 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .dock-link:hover {
+    color: var(--text-strong);
+    transform: translateY(-3px);
+  }
+
+  .dock-link:hover,
+  .dock-link.active {
+    background: color-mix(in srgb, var(--color-accent) 16%, transparent);
+  }
+
+  .dock-link.active {
+    color: var(--text-strong);
+  }
+
+  .dock-icon {
+    width: 1.4rem;
+    height: 1.4rem;
+  }
+
+  .dock-label {
+    font-size: 0.6rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    line-height: 1;
+    white-space: nowrap;
+  }
+
+  .dock-divider {
+    width: 1px;
+    align-self: stretch;
+    margin: 0.35rem 0.15rem;
+    background: var(--glass-border);
+  }
+
+  /* theme icon swap */
+  .moon {
+    display: none;
+  }
+  :global([data-theme="dark"]) .sun {
+    display: none;
+  }
+  :global([data-theme="dark"]) .moon {
+    display: block;
+  }
+
+  @media (max-width: 560px) {
+    .dock-label {
+      display: none;
+    }
+    .dock-link {
+      width: 3rem;
+      padding: 0.6rem 0;
+    }
+  }
+</style>
+
+<script>
+  // Theme toggle
+  const toggle = document.getElementById("theme-toggle");
+  toggle?.addEventListener("click", () => {
+    const root = document.documentElement;
+    const next =
+      root.getAttribute("data-theme") === "dark" ? "light" : "dark";
+    root.setAttribute("data-theme", next);
+    try {
+      localStorage.setItem("theme", next);
+    } catch {}
+  });
+
+  // Scroll spy for in-page section tabs
+  const links = Array.from(
+    document.querySelectorAll<HTMLAnchorElement>(".dock-link[data-dock]")
+  );
+  const byId = new Map(links.map((l) => [l.dataset.dock, l]));
+  const sections = links
+    .map((l) => document.getElementById(l.dataset.dock!))
+    .filter((el): el is HTMLElement => Boolean(el));
+
+  if (sections.length) {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            links.forEach((l) => l.classList.remove("active"));
+            byId.get(entry.target.id)?.classList.add("active");
+          }
+        });
+      },
+      { rootMargin: "-45% 0px -50% 0px", threshold: 0 }
+    );
+    sections.forEach((s) => observer.observe(s));
+  }
+</script>

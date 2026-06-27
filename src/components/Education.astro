@@ -1,0 +1,27 @@
+---
+import SectionHeading from "./SectionHeading.astro";
+import { education } from "../data/resume";
+---
+
+<section id="education" class="mt-16 scroll-mt-8">
+  <SectionHeading eyebrow="Background" title="Education" />
+
+  <div class="space-y-4">
+    {
+      education.map((item) => (
+        <article class="glass-card glass-card-hover flex flex-wrap items-center justify-between gap-3 p-6">
+          <div>
+            <h3 class="text-base font-bold sm:text-lg">{item.institution}</h3>
+            <p class="text-sm text-muted">
+              {item.credential} · {item.location}
+            </p>
+          </div>
+          <div class="text-right">
+            <p class="text-sm font-semibold text-gradient">{item.score}</p>
+            <p class="text-xs text-muted">{item.period}</p>
+          </div>
+        </article>
+      ))
+    }
+  </div>
+</section>
